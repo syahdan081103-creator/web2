@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart with Flowers</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #111 30%, #000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    h1 {
+      position: absolute;
+      bottom: 40px;
+      color: #ff99cc;
+      font-size: 2.5rem;
+      text-shadow: 0 0 10px #ff6699, 0 0 20px #ff99cc;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="alx"></canvas>
+  <h1>❤️ Love You ❤️</h1>
+
+  <script>
+    const c = document.getElementById("alx");
+    const ctx = c.getContext("2d");
+
+    c.width = innerWidth;
+    c.height = innerHeight;
+
+    const WIDTH = c.width;
+    const HEIGHT = c.height;
+
+    let R = Math.random;
+    let C = Math.cos;
+    let Y = 6.3;
+
+    let h = [];
+
+    // bentuk hati ❤️
+    for (let i = 0; i < Y; i += 0.2) {
+      h.push([
+        WIDTH / 2 + 210 * Math.pow(Math.sin(i), 3),
+        HEIGHT / 2 - (15 * C(i) - 5 * C(2 * i) - 2 * C(3 * i) - C(4 * i)) * 15
+      ]);
+    }
+
+    // Partikel bunga 🌸
+    let flowers = [];
+    for (let i = 0; i < 100; i++) {
+      flowers.push({
+        x: R() * WIDTH,
+        y: R() * HEIGHT,
+        r: 5 + R() * 10,
+        s: R() * 2 + 1,
+        c: `hsl(${R() * 360},70%,70%)`
+      });
+    }
+
+    function draw() {
+      ctx.fillStyle = "rgba(0,0,0,0.2)";
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      // gambar hati
+      for (let i = 0; i < h.length; i++) {
+        ctx.fillStyle = `hsl(${i * 10 + Date.now() / 20},100%,50%)`;
+        ctx.beginPath();
+        ctx.arc(h[i][0], h[i][1], 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // gambar bunga jatuh
+      for (let f of flowers) {
+        ctx.beginPath();
+        ctx.fillStyle = f.c;
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        f.y += f.s;
+        f.x += Math.sin(f.y / 50);
+
+        if (f.y > HEIGHT) {
+          f.y = -10;
+          f.x = R() * WIDTH;
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
